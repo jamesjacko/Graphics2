@@ -97,7 +97,7 @@ public class PlaneVisualisationNonOrthogonalListener implements GLEventListener 
                             int index = volumeData[(int)x][(int)y][z];
                             double color[] = pv.getColor(index);
                             gl.glColor3d(color[0], color[1], color[2]);
-                            drawPixel(gl, dimensions[1] - y, z, -1.0, 1, new Point2D.Double(0,0));
+                            drawPixel(gl, y, z, -1.0, 1, new Point2D.Double(0,0));
                         }
 
                     error += deltaError;
@@ -114,9 +114,8 @@ public class PlaneVisualisationNonOrthogonalListener implements GLEventListener 
                             int index = volumeData[(int)x][(int)y][z];
                             double color[] = pv.getColor(index);
                             gl.glColor3d(color[0], color[1], color[2]);
-                            drawPixel(gl,  x, z, -1.0, 1, new Point2D.Double(0,0));
+                            drawPixel(gl, dimensions[0] - x, z, -1.0, 1, new Point2D.Double(0,0));
                         }
-                    
                     error += deltaError;
                     if(error >= 0.5){
                         y += incY;

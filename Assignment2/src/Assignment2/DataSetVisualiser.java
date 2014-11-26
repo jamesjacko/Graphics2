@@ -32,7 +32,7 @@ public class DataSetVisualiser extends JFrame {
 //            dl = new DataSetLoader(file, 256, 256, 256);
 //        }
         
-        dl = new DataSetLoader("brain.raw", 181, 217, 181);
+        dl = new DataSetLoader("skull.raw", 256, 256, 256);
         
         ds = dl.getSet();
         panelCount = 2;

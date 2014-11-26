@@ -26,13 +26,13 @@ public class PlaneVisualisation extends JInternalFrame {
     private GLCanvas glcanvas;
     private JComboBox profileChooser;
     static int openFrameCount = 0;
-    static final int xOffset = 250, yOffset = 0;
+    static final int xOffset = 260, yOffset = 0;
     
     
     final private int[][] combos = {{1,2},{0,2},{0,1}};
     
     public PlaneVisualisation(VDSEx ds1, int dimension, ArrayList<ArrayList> firstColorProfiles){
-        super("Plane #" + (++openFrameCount),
+        super("Plane #" + (openFrameCount),
           false, //resizable
           false, //closable
           false, //maximizable
@@ -101,7 +101,8 @@ public class PlaneVisualisation extends JInternalFrame {
         add(ortho, BorderLayout.CENTER);
         add(profileChooser, BorderLayout.SOUTH);
         pack();
-        setLocation(xOffset*openFrameCount, yOffset*openFrameCount);
+        setLocation((xOffset*openFrameCount) + 150 , yOffset*openFrameCount);
+        openFrameCount++;
     }
     
     
