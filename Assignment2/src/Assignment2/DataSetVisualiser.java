@@ -62,6 +62,7 @@ public class DataSetVisualiser extends JFrame {
         planes.add(new PlaneVisualisation(ds, 0, colorProfiles)); 
         planes.add(new PlaneVisualisation(ds, 1, colorProfiles));
         planes.add(new PlaneVisualisation(ds, 2, colorProfiles));
+        planes.add(new PlaneVisualisation(ds, 3, colorProfiles));
         JButton press = new JButton("Add Panel");
         JButton addColorProfile = new JButton("Color Profiles");
         
@@ -81,17 +82,23 @@ public class DataSetVisualiser extends JFrame {
         
         controlPanel.add(press);
         controlPanel.add(addColorProfile);
-        for(PlaneVisualisation plane: planes)
-            planesPanel.add(plane);
+        JDesktopPane desktop = new JDesktopPane();
+        desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+        ColorProfiles colors = new ColorProfiles(ds);
         
-        layout.add(planesPanel, BorderLayout.NORTH);
-        layout.add(controlPanel, BorderLayout.CENTER);
-        
+        desktop.add(colors);
+        for(PlaneVisualisation plane: planes){
+            desktop.add(plane);
+            plane.setVisible(true);
+        }
+        layout.add(desktop, BorderLayout.CENTER);
+        //layout.add(controlPanel, BorderLayout.CENTER);
         add(layout);
-        
+        //setContentPane(desktop);
+        setJMenuBar(new PlaneMenu());
         //add the GLCanvas just like we would any Component
         
-        pack();
+        setExtendedState(MAXIMIZED_BOTH);
         
         
         //center the JFrame on the screen

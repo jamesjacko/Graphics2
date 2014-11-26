@@ -5,6 +5,7 @@
  */
 package Assignment2;
 
+import static Assignment2.PlaneVisualisation.openFrameCount;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -25,12 +27,17 @@ import javax.swing.JScrollPane;
  *
  * @author jacko
  */
-public class ColorProfiles extends JDialog {
+public class ColorProfiles extends JInternalFrame {
     private DataSetVisualiser ds;
     private ArrayList<ArrayList> profiles;
     private JList profileList;
     private DefaultListModel<String> profileListModel;
     public ColorProfiles(DataSetVisualiser dsv){
+        super("Color Profiles",
+          false, //resizable
+          false, //closable
+          false, //maximizable
+          false);//iconifiable
         this.ds = dsv;
         profileListModel = new DefaultListModel<>();
         profileList = new JList(profileListModel);

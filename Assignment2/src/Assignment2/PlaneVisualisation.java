@@ -17,7 +17,7 @@ import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 
 
-public class PlaneVisualisation extends JComponent {
+public class PlaneVisualisation extends JInternalFrame {
     
     final private VDSEx ds;
     private int dimension;
@@ -25,12 +25,20 @@ public class PlaneVisualisation extends JComponent {
     private ArrayList<ArrayList> colorProfiles;
     private GLCanvas glcanvas;
     private JComboBox profileChooser;
+    static int openFrameCount = 0;
+    static final int xOffset = 250, yOffset = 0;
     
     
     final private int[][] combos = {{1,2},{0,2},{0,1}};
     
     public PlaneVisualisation(VDSEx ds1, int dimension, ArrayList<ArrayList> firstColorProfiles){
+        super("Plane #" + (++openFrameCount),
+          false, //resizable
+          false, //closable
+          false, //maximizable
+          false);//iconifiable
         setLayout(new BorderLayout());
+        
         this.ds = ds1;
         this.dimension = dimension;
         
@@ -44,7 +52,8 @@ public class PlaneVisualisation extends JComponent {
         Dimension canvasSize = new Dimension(largest, largest);
         int[] dims = ds.getDimensions();
         glcanvas = new GLCanvas();
-        JSlider ortho = new JSlider(0, dims[dimension] - 1);
+        int max = (dimension < 3)? dims[dimension] : 360;
+        JSlider ortho = new JSlider(0, max - 1);
         profileChooser = new JComboBox();
         int count = 0;
         for(ArrayList<IndexedColor> single: colorProfiles)
@@ -78,16 +87,21 @@ public class PlaneVisualisation extends JComponent {
             }
         });
         
-        
-        PlaneVisualisationListener pvl = new PlaneVisualisationListener(this, this.ds, this.dimension, ds.getMaxValue()/2, largest);
-        
+        if(dimension < 3){
+            PlaneVisualisationListener pvl = new PlaneVisualisationListener(this, this.ds, this.dimension, ds.getMaxValue()/2, largest);
+            glcanvas.addGLEventListener(pvl);
+        } else {
+            PlaneVisualisationNonOrthogonalListener pvl = new PlaneVisualisationNonOrthogonalListener(this, this.ds, this.dimension, ds.getMaxValue()/2, largest);
+            glcanvas.addGLEventListener(pvl);
+        }
         
         
         glcanvas.setPreferredSize(new Dimension(largest, largest));
-        glcanvas.addGLEventListener(pvl);
         add(glcanvas, BorderLayout.NORTH);
         add(ortho, BorderLayout.CENTER);
         add(profileChooser, BorderLayout.SOUTH);
+        pack();
+        setLocation(xOffset*openFrameCount, yOffset*openFrameCount);
     }
     
     
