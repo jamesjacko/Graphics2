@@ -17,26 +17,17 @@ public class DataSetVisualiser extends JFrame {
     private int panelCount;
     private ArrayList<ArrayList> colorProfiles;
     private ArrayList<PlaneVisualisation> planes;
+    private JDesktopPane desktop;
+    private ColorProfiles colors;
     
     public DataSetVisualiser(){
         super("Data Set Visualiser");
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        JFileChooser chooser = new JFileChooser("Choose Files");
         
-//        int val = chooser.showOpenDialog(this);
-//        File file;
-//        if(val==JFileChooser.APPROVE_OPTION){
-//            file = chooser.getSelectedFile();
-//            dl = new DataSetLoader(file, 256, 256, 256);
-//        }
         
-        dl = new DataSetLoader("skull.raw", 256, 256, 256);
         
-        ds = dl.getSet();
-        panelCount = 2;
-        dimensions = ds.getDimensions();
         planesPanel = new JPanel(new GridLayout(0, 3, 10, 10));
         
         colorProfiles = new ArrayList<>();
@@ -55,14 +46,14 @@ public class DataSetVisualiser extends JFrame {
         
         colorProfiles.add(secondProfile);
         
-        JPanel layout = new JPanel(new BorderLayout());
-        JPanel controlPanel = new JPanel();
+        
         
         planes = new ArrayList<PlaneVisualisation>();
-        planes.add(new PlaneVisualisation(ds, 0, colorProfiles)); 
-        planes.add(new PlaneVisualisation(ds, 1, colorProfiles));
-        planes.add(new PlaneVisualisation(ds, 2, colorProfiles));
-        planes.add(new PlaneVisualisation(ds, 3, colorProfiles));
+        
+        
+        
+        JPanel layout = new JPanel(new BorderLayout());
+        JPanel controlPanel = new JPanel();
         JButton press = new JButton("Add Panel");
         JButton addColorProfile = new JButton("Color Profiles");
         
@@ -82,20 +73,17 @@ public class DataSetVisualiser extends JFrame {
         
         controlPanel.add(press);
         controlPanel.add(addColorProfile);
-        JDesktopPane desktop = new JDesktopPane();
+        desktop = new JDesktopPane();
         desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
-        ColorProfiles colors = new ColorProfiles(ds);
+        colors = new ColorProfiles(ds);
         
         desktop.add(colors);
-        for(PlaneVisualisation plane: planes){
-            desktop.add(plane);
-            plane.setVisible(true);
-        }
+        
         layout.add(desktop, BorderLayout.CENTER);
         //layout.add(controlPanel, BorderLayout.CENTER);
         add(layout);
         //setContentPane(desktop);
-        setJMenuBar(new PlaneMenu());
+        setJMenuBar(new PlaneMenu(this));
         //add the GLCanvas just like we would any Component
         
         setExtendedState(MAXIMIZED_BOTH);
@@ -105,15 +93,41 @@ public class DataSetVisualiser extends JFrame {
         centerWindow(this);
     }
     
-    public void addPanel(){
-        if(panelCount < 6){
-            PlaneVisualisation plane = new PlaneVisualisation(ds, 1, colorProfiles);
-            planes.add(plane);
-            planesPanel.add(planes.get(panelCount - 1));
-            panelCount++;
-            pack();
-            centerWindow(this);
+    public void loadFile(File file, int[] sizes){
+        
+        desktop.removeAll();
+        dl = new DataSetLoader(file, sizes[0], sizes[1], sizes[2]);
+        
+        ds = dl.getSet();
+        panelCount = 2;
+        dimensions = ds.getDimensions();
+        
+        desktop.add(colors);
+        
+        planes.removeAll(planes);
+        
+        planes.add(new PlaneVisualisation(ds, 0, colorProfiles, "Orthogonal X")); 
+        planes.add(new PlaneVisualisation(ds, 1, colorProfiles, "Orthogonal Y"));
+        planes.add(new PlaneVisualisation(ds, 2, colorProfiles, "Orthogonal Z"));
+        planes.add(new PlaneVisualisation(ds, 3, colorProfiles, "Non Orthogonal X"));
+        planes.add(new PlaneVisualisation(ds, 4, colorProfiles, "Non Orthogonal Y"));
+        planes.add(new PlaneVisualisation(ds, 5, colorProfiles, "Non Orthogonal Z"));
+        
+        for(PlaneVisualisation plane: planes){
+            desktop.add(plane);
+            plane.setVisible(true);
         }
+    }
+    
+    public void addPanel(){
+//        if(panelCount < 6){
+//            PlaneVisualisation plane = new PlaneVisualisation(ds, 1, colorProfiles);
+//            planes.add(plane);
+//            planesPanel.add(planes.get(panelCount - 1));
+//            panelCount++;
+//            pack();
+//            centerWindow(this);
+//        }
     }
     
     public void repaintViews(){

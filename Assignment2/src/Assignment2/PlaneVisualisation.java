@@ -26,14 +26,14 @@ public class PlaneVisualisation extends JInternalFrame {
     private GLCanvas glcanvas;
     private JComboBox profileChooser;
     static int openFrameCount = 0;
-    static final int xOffset = 260, yOffset = 0;
+    static final int xOffset = 280, yOffset = 0;
     
     
     final private int[][] combos = {{1,2},{0,2},{0,1}};
     
-    public PlaneVisualisation(VDSEx ds1, int dimension, ArrayList<ArrayList> firstColorProfiles){
-        super("Plane #" + (openFrameCount),
-          false, //resizable
+    public PlaneVisualisation(VDSEx ds1, int dimension, ArrayList<ArrayList> firstColorProfiles, String title){
+        super(title,
+          true, //resizable
           false, //closable
           false, //maximizable
           false);//iconifiable
@@ -49,6 +49,7 @@ public class PlaneVisualisation extends JInternalFrame {
         int largest = 0;
         for(int i: size)
             largest = (i > largest)? i: largest;
+        
         Dimension canvasSize = new Dimension(largest, largest);
         int[] dims = ds.getDimensions();
         glcanvas = new GLCanvas();
@@ -97,11 +98,14 @@ public class PlaneVisualisation extends JInternalFrame {
         
         
         glcanvas.setPreferredSize(new Dimension(largest, largest));
-        add(glcanvas, BorderLayout.NORTH);
-        add(ortho, BorderLayout.CENTER);
-        add(profileChooser, BorderLayout.SOUTH);
+        add(glcanvas, BorderLayout.CENTER);
+        JPanel controls = new JPanel(new BorderLayout());
+        controls.add(ortho, BorderLayout.NORTH);
+        controls.add(profileChooser, BorderLayout.CENTER);
+        add(controls, BorderLayout.SOUTH);
         pack();
-        setLocation((xOffset*openFrameCount) + 150 , yOffset*openFrameCount);
+        int top = (dimension > 2)? 330 : -5;
+        setLocation((xOffset*(openFrameCount % 3)) + 150 , yOffset*openFrameCount + top);
         openFrameCount++;
     }
     

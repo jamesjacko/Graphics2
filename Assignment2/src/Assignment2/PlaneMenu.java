@@ -5,6 +5,8 @@
  */
 package Assignment2;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -17,13 +19,22 @@ public class PlaneMenu extends JMenuBar {
     JMenu file;
     JMenuItem open;
     JMenuItem exit;
-    public PlaneMenu(){
+    private DataSetVisualiser ds;
+    public PlaneMenu(final DataSetVisualiser ds){
         super();
         file = new JMenu("File");
         open = new JMenuItem("Open");
         exit = new JMenuItem("Exit");
+        this.ds = ds;
         
         file.add(open);
+        
+        open.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ev){
+                ChooseFile choose = new ChooseFile();
+                ds.loadFile(choose.getFile(), choose.getDimensions());
+            }
+        });
         file.add(exit);
         
         add(file);
